@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add User</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .header {
+            height: 60px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .form-container {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+  color: #333;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 40px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.form-group input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.form-actions {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.submit-btn {
+  padding: 10px 30px;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+    </style>
+</head>
+<body>
+
+<!-- <div class="header">
+    <h2>My Application</h2>
+</div> -->
+
+<div class="form-container">
+  <h2 class="form-title">Add User</h2>
+
+  <form id="userForm" onsubmit="submitUserForm(event)">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Name:</label>
+        <input type="text" name="name" required />
+      </div>
+      <div class="form-group">
+        <label>Phone:</label>
+        <input type="text" name="phone" required />
+      </div>
+
+      <div class="form-group">
+        <label>Father Name:</label>
+        <input type="text" name="fatherName" />
+      </div>
+      <div class="form-group">
+        <label>Address:</label>
+        <input type="text" name="address" />
+      </div>
+
+      <div class="form-group">
+        <label>City:</label>
+        <input type="text" name="city" />
+      </div>
+      <div class="form-group">
+        <label>District:</label>
+        <input type="text" name="district" />
+      </div>
+
+      <div class="form-group">
+        <label>Pincode:</label>
+        <input type="text" name="pincode" />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="submit-btn">Save User</button>
+    </div>
+  </form>
+</div>
+
+
+</body>
+</html>

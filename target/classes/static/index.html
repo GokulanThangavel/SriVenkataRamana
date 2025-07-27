@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Welcome Page</title>
+
+<style>
+body {
+	margin: 0;
+	font-family: Arial, sans-serif;
+	background-image: url('/background.jpg');
+	/* Add your background image here */
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	
+}
+
+.header {
+	height: 60px;
+	background-color: #333;
+	color: white;
+	display: flex;
+	align-items: center;
+	padding: 0 20px;
+}
+
+.container {
+	display: flex;
+	height: calc(100vh - 40vh);
+}
+
+.sidebar {
+	width: 200px;
+	background-color: #f0f0f0;
+	padding: 20px;
+	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar a {
+	display: block;
+	margin-bottom: 15px;
+	text-decoration: none;
+	color: #333;
+	font-weight: bold;
+}
+
+.content {
+	flex: 1;
+	padding: 0px 20px;
+	/* background-color: #fdf1f4; */
+	/*  background: linear-gradient(0deg, rgb(52 104 154 / 70%), rgba(52, 104, 154, 0.7)), url(https://news.tirumala.org/uat/wp-content/uploads/2024/04/pattern.jpg) rgba(52, 104, 154, 0.7); */
+	background-repeat: repeat;
+	background-size:390px;
+}
+
+.welcome-text {
+	font-size: 24px;
+	color: #444;
+}
+
+.universalHeader_App__bn7uH {
+	height: 76px;
+	width: 100%;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
+	border-radius: 0 0 32px 32px;
+	background-image: url('/images/TTD_MainBanner_Sky_Night.png')
+}
+
+.murthy {
+	display: block;
+	margin: auto;
+}
+
+.navbar {
+	background-color: #673ab7; /* Purple */
+	color: white;
+	display: flex;
+	align-items: center;
+	padding: 0 20px;
+	height: 60px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar a {
+	color: white;
+	text-decoration: none;
+	margin: 0 15px;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+}
+
+.navbar a:hover {
+	text-decoration: none;
+}
+
+.navbar .menu {
+	display: flex;
+	flex: 1;
+	align-items: center;
+}
+
+.navbar .menu .dropdown {
+	position: relative;
+}
+
+.navbar .menu .dropdown-content {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	background-color: #512da8;
+	min-width: 150px;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+	z-index: 1;
+}
+
+.navbar .menu .dropdown-content a {
+	padding: 10px;
+	display: block;
+	color: white;
+}
+
+.navbar .menu .dropdown:hover .dropdown-content {
+	display: block;
+}
+
+.navbar .login {
+	display: flex;
+	align-items: center;
+}
+
+.navbar i {
+	margin-right: 5px;
+}
+
+#loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+  display: none; /* hidden by default */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* stay on top */
+}
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.popup-message {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #28a745;
+  color: white;
+  padding: 20px 40px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 1000;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* space between icon and text */
+}
+
+a:hover {
+  color: #007bff;
+}
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  min-width: 280px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  color: white;
+  font-size: 15px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.4s ease, fadeOut 0.5s ease 2.5s forwards;
+}
+
+.toast.success { background-color: #22c55e; }   /* Green */
+.toast.error { background-color: #ef4444; }     /* Red */
+.toast.info { background-color: #3b82f6; }      /* Blue */
+
+@keyframes slideIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  to {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+
+
+
+</style>
+</head>
+<body>
+	<div
+		style="background-color: var(--primary-color); position: sticky; top: 0;">
+		<div style="z-index: 10; position: relative;">
+			<div class="universalHeader_App__bn7uH">
+				<div class="universalHeader_App__bn7uH">
+					<img src='/images/Murthy.png' class="murthy">
+
+				</div>
+			</div>
+		</div>
+
+		<div class="navbar">
+			<div class="menu">
+				<!-- <a onclick="loadHTML('about.html')"><i class="fa fa-home"></i>
+					About</a> -->
+					
+					<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+<a href="/index.html" class="nav-link">
+  <i class="fas fa-home"></i> Home
+</a>
+					
+					
+
+				<div class="dropdown">
+					<a><i ></i> Users <i></i></a>
+					<div class="dropdown-content">
+						<a onclick="loadHTML('add-user.html')">Add User</a> 
+						<a onclick="loadHTML('view-user.html')">View User</a> 
+						<a onclick="loadHTML('report.html')">Report</a>
+					</div>
+				</div>
+
+				<a onclick="loadHTML('news.html')">News</a> <a
+					onclick="loadHTML('temples.html')">Temples</a>
+
+				<div class="dropdown">
+					<a>Social Service <i class="fa fa-caret-down"></i></a>
+					<div class="dropdown-content">
+						<a onclick="loadHTML('education.html')">Education</a>
+						<a onclick="loadHTML('health.html')">Health</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="login">
+				<a href="#"><i class="fa fa-sign-in-alt"></i> </a>
+			</div>
+		</div>
+	</div>
+
+	<div id="content" class="content"></div>
+	
+	
+	<div id="popupMessage" class="popup-message">User added successfully!</div>
+	
+	<div class="toast-container" id="toastContainer"></div>
+
+	<div id="loadingOverlay">
+		<div class="spinner"></div>
+	</div>
+
+	<script src="script.js"></script>
+</body>
+</html>

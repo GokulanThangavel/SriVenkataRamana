@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>View User</title>
+<style>
+body {
+	font-family: Arial;
+}
+
+input, button {
+	padding: 8px;
+	margin: 5px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px;
+}
+
+th, td {
+	border: 1px solid #ccc;
+	padding: 10px;
+	text-align: left;
+}
+
+.card-container {
+	font-family: Arial, sans-serif;
+}
+
+.user-card {
+	background: #fff;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+	margin-bottom: 20px;
+	overflow: hidden;
+	transition: all 0.3s ease-in-out;
+}
+
+.user-card-top {
+	display: flex;
+	justify-content: space-between;
+	padding: 20px;
+}
+
+.user-info {
+	display: flex;
+	flex-direction: column;
+}
+
+.user-name {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.user-detail {
+	color: gray;
+	margin-top: 5px;
+}
+
+.user-actions {
+	display: flex;
+	gap: 10px;
+	padding: 15px 20px;
+	background: #f9f9f9;
+	border-top: 1px solid #eee;
+}
+
+.user-actions button {
+	padding: 8px 12px;
+	border: none;
+	border-radius: 4px;
+	color: white;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+.btn-view {
+	background-color: #00a8cc;
+}
+
+.btn-edit {
+	background-color: #006eff;
+}
+
+.btn-delete {
+	background-color: #ffb400;
+}
+
+.expand-details {
+	display: none;
+	padding: 15px 20px;
+	background-color: #f0f0f0;
+	border-top: 1px solid #ddd;
+	animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {from { opacity:0;
+	transform: translateY(-10px);
+}
+
+to {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+}
+.loading-overlay {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 999;
+	justify-content: center;
+	align-items: center;
+	font-size: 20px;
+	color: white;
+}
+
+.payment-table {
+	width: 100%;
+	margin-top: 20px;
+	border-collapse: collapse;
+	background-color: white;
+}
+
+.payment-table th {
+	background-color: #f5e0e0;
+	padding: 10px;
+	text-align: left;
+	font-weight: bold;
+	border-bottom: 1px solid #ddd;
+}
+
+.payment-table td {
+	padding: 10px;
+	border-bottom: 1px solid #eee;
+}
+
+.btn-save {
+	background-color: green;
+	color: white;
+	padding: 8px 16px;
+	border: none;
+	border-radius: 6px;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+fieldset {
+	border: none;
+	justify-content: flex-end;
+	min-width: 280px;
+	margin: 0px;
+	padding: 0px;
+}
+
+fieldset>label {
+	display: inline-block;
+	width: 100px;
+	font-weight: bold;
+	vertical-align: top;
+	font-size: 1rem;
+	line-height: 28px;
+}
+
+fieldset>label::after {
+	content: ":";
+}
+
+select, details {
+	position: absolute;
+	background-color: #f1f1f1;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+}
+
+select, summary {
+	border: 1px solid var(--lt-gray);
+	border-collapse: collapse;
+	border-radius: 4px;
+	padding: 8px;
+	margin: 5px;
+	width: 250px;
+	background-color: white;
+	cursor: pointer;
+}
+
+details[open]>summary::marker {
+	color: var(--blue);
+}
+
+ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	margin-top: 2px;
+	border: 1px solid var(--dk-gray);
+	box-shadow: 0 0 5px 1px var(--lt-gray);
+}
+
+li {
+	margin: 0px;
+	padding: 0px;
+}
+
+li>label {
+	cursor: pointer;
+	display: inline-block;
+	width: 100%;
+}
+
+li>label:hover, li>label:has(input:checked) {
+	background-color: var(--dk-gray);
+	color: white;
+}
+
+:root {
+	--blue: #0255f0;
+	--lt-gray: #cccccc;
+	--dk-gray: #767676;
+}
+
+.view-detail {
+	display: flex;
+	justify-content: space-between;
+}
+
+.amount-card-container {
+  display: flex;
+  gap: 85px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.amount-card {
+  flex: 1;
+  min-width: 190px;
+  padding: 12px;
+  border-radius: 8px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.amount-card h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.amount-card p {
+  margin: 8px 0 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.amount-card.green {
+  background-color: #28a745;
+}
+
+.amount-card.blue {
+  background-color: #007bff;
+}
+
+.amount-card.orange {
+  background-color: #fd7e14;
+}
+
+
+</style>
+</head>
+<body>
+	<h2>Search User by Phone Number</h2>
+	<div class="view-detail">
+		<div>
+			<input type="text" id="phone" placeholder="Enter phone number" />
+			<button onclick="searchUser()">Search</button>
+		</div>
+
+		<fieldset>
+			<details>
+				<summary>Choose your function type</summary>
+
+				<ul id="functionTypeList">
+					<!-- Options inserted here dynamically -->
+				</ul>
+			</details>
+		</fieldset>
+		<p id="dropdownError" style="color: red; display: none;">Please select at least one function type.</p>
+		
+	</div>
+
+
+	<div id="loadingOverlay" class="loading-overlay">
+		<div>Loading...</div>
+	</div>
+
+	<div id="userCards" class="card-container"></div>
+	<div id="noResults" style="display: none; text-align: center;">
+		<img src="/images/no-data.png" alt="No Results"
+			style="max-width: 300px;" />
+		<p style="font-size: 18px; color: #555;">
+			No results found<br>
+			<span style="font-size: 14px;">Try searching again</span>
+		</p>
+	</div>
+</body>
+</html>
