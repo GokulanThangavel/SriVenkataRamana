@@ -1,5 +1,6 @@
 package com.example.googlesheets.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.example.googlesheets.model.User;
@@ -12,7 +13,12 @@ import java.util.UUID;
 @Service
 public class AddUserService {
 
-	private static final String FILE_PATH = "users.xlsx";
+	@Value("${file.directory}")
+	private String fileDirectory;
+
+	@Value("${users.files}")
+	private String users;
+
 
 	public String addUsers(User userData) {
 		
@@ -22,8 +28,11 @@ public class AddUserService {
 
 	}
 
-	public static void writeUserToExcel(User user) {
-		File file = new File(FILE_PATH);
+	public void writeUserToExcel(User user) {
+
+		String file_path=fileDirectory+users;
+
+		File file = new File(file_path);
 		Workbook workbook;
 		Sheet sheet;
 
@@ -74,12 +83,12 @@ public class AddUserService {
 		    }
 
 		    // Write to file
-		    try (FileOutputStream fos = new FileOutputStream(FILE_PATH)) {
+		    try (FileOutputStream fos = new FileOutputStream(file_path)) {
 		        workbook.write(fos);
 		    }
 		    workbook.close();
 
-		    System.out.println("User saved to local Excel: " + FILE_PATH);
+		    System.out.println("User saved to local Excel: " + file_path);
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}

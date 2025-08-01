@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  springboot-app:
+    build: .
+    ports:
+      - "8098:8098"
+    volumes:
+      - D:/data:/D/data       # ✅ Mount the actual folder from Windows
+    restart: always
