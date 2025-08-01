@@ -123,6 +123,9 @@
 	</dependencies>
 
 	<build>
+
+			<defaultGoal>package</defaultGoal>
+
 		<plugins>
 			<!-- Spring Boot Plugin -->
 			<plugin>
