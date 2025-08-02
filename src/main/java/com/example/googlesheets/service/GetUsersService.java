@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.googlesheets.utils.SafeParser;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -107,7 +108,7 @@ public class GetUsersService {
 
                 if (phoneToSearch.equals(phone)) {
 
-                    usersList.add(new User(Integer.valueOf(getCellValueAsString(row.getCell(0))),
+                    usersList.add(new User(SafeParser.safeParseInt(getCellValueAsString(row.getCell(0))),
                             getCellValueAsString(row.getCell(1)), getCellValueAsString(row.getCell(3)), phone,
                             getCellValueAsString(row.getCell(4)), getCellValueAsString(row.getCell(5)),
                             getCellValueAsString(row.getCell(6)), getCellValueAsString(row.getCell(7)),
@@ -161,7 +162,7 @@ public class GetUsersService {
                 if (row.getRowNum() == 0)
                     continue; // skip header
 
-                functionList.add(new FunctionType(Integer.valueOf(getCellValueAsString(row.getCell(0))),
+                functionList.add(new FunctionType(SafeParser.safeParseInt(getCellValueAsString(row.getCell(0))),
                         getCellValueAsString(row.getCell(1)), getCellValueAsString(row.getCell(2)),
                         getCellValueAsString(row.getCell(3)), getCellValueAsString(row.getCell(4))));
 
@@ -195,11 +196,9 @@ public class GetUsersService {
             Sheet sheet = workbook.getSheetAt(0);
 
             List<FunctionPaymentDetails> functionList = new ArrayList<FunctionPaymentDetails>();
-            System.out.println(sheet.getLastRowNum());
-            System.out.println(fileName);
 
             Integer limit = 2;
-            Integer columnLimit = 13;
+            Integer columnLimit = 14;
             this.blankCount = 0;
 
             for (Row row : sheet) {
@@ -209,13 +208,13 @@ public class GetUsersService {
                 if (!checkAllAreEmpty(row, columnLimit, blankCount) && blankCount < limit) {
                     blankCount = 0;
 
-                    if (userno.equals(Integer.valueOf(getCellValueAsString(row.getCell(2))))
+                    if (userno.equals(SafeParser.safeParseInt(getCellValueAsString(row.getCell(2))))
                             && phone.equalsIgnoreCase(getCellValueAsString(row.getCell(3)))
                             && userUUID.equalsIgnoreCase(getCellValueAsString(row.getCell(11)))
                             && functionUUID.equalsIgnoreCase(getCellValueAsString(row.getCell(12)))) {
 
                         functionList
-                                .add(new FunctionPaymentDetails(Integer.valueOf(getCellValueAsString(row.getCell(0))),
+                                .add(new FunctionPaymentDetails(SafeParser.safeParseInt(getCellValueAsString(row.getCell(0))),
                                         getCellValueAsString(row.getCell(1)), getCellValueAsString(row.getCell(2)),
                                         getCellValueAsString(row.getCell(3)), getCellValueAsString(row.getCell(4)),
                                         getCellValueAsString(row.getCell(5)), getCellValueAsString(row.getCell(6)),
@@ -229,8 +228,6 @@ public class GetUsersService {
                 if (blankCount.equals(limit)) {
                     return functionList;
                 }
-
-                System.out.println(blankCount + "----" + limit);
 
             }
 
@@ -250,9 +247,9 @@ public class GetUsersService {
 
         Integer columnblank = 0;
 
-        for (int i = 0; i <= columnNumber; i++) {
+        for (int i = 0; i < columnNumber; i++) {
 
-            if (row.getCell(i) == null) {
+            if ( getCellValueAsString(row.getCell(i))==null || row.getCell(i) == null ) {
                 columnblank++;
 
 
