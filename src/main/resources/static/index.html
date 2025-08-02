@@ -228,6 +228,126 @@ a:hover {
   }
 }
 
+.error-popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 123, 255, 0.2); /* blue transparent */
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-popup-box {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  text-align: center;
+  animation: popin 0.3s ease;
+}
+
+.popup-image {
+  width: 80px;
+  margin-bottom: 20px;
+}
+
+.error-popup-box h2 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.error-popup-box p {
+  margin: 10px 0 20px;
+  font-size: 16px;
+}
+
+.error-popup-box button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Animation (optional) */
+@keyframes popin {
+  from {
+    transform: scale(0.95);
+    opacity: 0.3;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: local('Montserrat'), url('/fonts/Montserrat.woff2') format('woff2');
+}
+
+.error-popup-overlay {
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Loader box */
+.container {
+  width: 300px;
+  height: 120px;
+  background: white;
+  border-radius: 10px;
+  filter: drop-shadow(2px 2px 5px #00000057);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.loading-wrapper {
+  height: 10px;
+  width: 90%;
+  background: #CFD8DC;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.loader {
+  background-color: #304FFE;
+  height: 100%;
+  width: 80%;
+  animation: loading 2s ease infinite;
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(130%);
+  }
+}
 
 
 
@@ -289,6 +409,25 @@ a:hover {
 	
 	
 	<div id="popupMessage" class="popup-message">User added successfully!</div>
+
+	<div id="errorPopup" class="error-popup-overlay">
+		<div class="error-popup-box">
+			<img src="/images/no-file.png" alt="Error" class="popup-image" />
+			<h2>Ooops!</h2>
+			<p>Something went wrong.Please refresh your browser.</p>
+			<p>Please contact Admin: +91 9865247133</p>
+			<button onclick="closePopup()">Ok, got it!</button>
+		</div>
+	</div>
+
+	<div id="globalLoader" class="loader-overlay">
+		<div class="container">
+			<h1>Please wait...</h1>
+			<div class="loading-wrapper">
+				<div class="loader"></div>
+			</div>
+		</div>
+	</div>
 	
 	<div class="toast-container" id="toastContainer"></div>
 

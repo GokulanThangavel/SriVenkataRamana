@@ -14,6 +14,7 @@ public class User {
     private String district;
     private String pincode;
     private List<FunctionPaymentDetails> functionPaymentList;
+	private HeadderCalculation headderCalculation;
 	
 	public String getName() {
 		return name;
@@ -75,11 +76,15 @@ public class User {
 	public void setFunctionPaymentList(List<FunctionPaymentDetails> functionPaymentList) {
 		this.functionPaymentList = functionPaymentList;
 	}
-	
-	
-	
+	public HeadderCalculation getHeadderCalculation() {
+		return headderCalculation;
+	}
+	public void setHeadderCalculation(HeadderCalculation headderCalculation) {
+		this.headderCalculation = headderCalculation;
+	}
+
 	public User(Integer sNO, String uUID, String name, String phone, String fatherName, String address, String city,
-			String district, String pincode) {
+				String district, String pincode) {
 		super();
 		this.SNO = sNO;
 		this.UUID = uUID;

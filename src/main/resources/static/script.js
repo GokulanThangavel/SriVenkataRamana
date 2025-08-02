@@ -23,7 +23,7 @@ function loadHTML(filename) {
 
 function onInit(filename) {
 
-	if (filename = 'view-user.html') {
+	if (filename == 'view-user.html') {
 
 		loadFunctionTypeList();
 
@@ -52,11 +52,12 @@ function onInit(filename) {
 
 ----------------------------------------------------------------------------------------------------------------------------------------------*/
 async function loadFunctionTypeList() {
-
+    showLoading();
 	try {
 		const res = await fetch(`/api/user/functionTypes`);
 		const result = await res.json();
 		if (result.status === "Success" && result.data) {
+
 			functionTypes = result.data;
 			const list = document.getElementById("functionTypeList");
 			console.log(functionTypes)
@@ -70,10 +71,20 @@ async function loadFunctionTypeList() {
           </label>`;
 				list.appendChild(li);
 			});
+			 // Allow only one checkbox selection
+                        list.addEventListener("change", function (e) {
+                            if (e.target && e.target.name === "functionType") {
+                                const checkboxes = list.querySelectorAll('input[type="checkbox"]');
+                                checkboxes.forEach(cb => {
+                                    if (cb !== e.target) cb.checked = false;
+                                });
+                            }
+                        });
+
+                        hideLoading();
 		}
 	} catch (error) {
 		console.error("Error:", error);
-		overlay.style.display = "none";
 		noResults.style.display = "block";
 	}
 
@@ -128,7 +139,7 @@ async function searchUser() {
 	overlay.style.display = "flex";
 	noResults.style.display = "none";
 	userCards.innerHTML = "";
-
+ showLoading();
 	try {
 		const res = await fetch(`/api/user/get`, {
 			method: "POST",
@@ -140,7 +151,7 @@ async function searchUser() {
 
 		const response = await res.json();
 		overlay.style.display = "none";
-
+        hideLoading();
 		if (response.status === "Success" && response.data) {
 			let users = Array.isArray(response.data) ? response.data : [response.data];
 
@@ -155,8 +166,7 @@ async function searchUser() {
 		}
 	} catch (error) {
 		console.error("Error:", error);
-		overlay.style.display = "none";
-		noResults.style.display = "block";
+        showErrorPopup();
 	}
 }
 
@@ -215,15 +225,15 @@ function renderCards(users) {
         <div class="amount-card-container">
     <div class="amount-card green">
       <h3>Total</h3>
-      <p>${user.totalAmount || 0}</p>
+      <p>${user.headderCalculation.totalAmount || 0.00}</p>
     </div>
     <div class="amount-card blue">
       <h3>Paid</h3>
-      <p>${user.paidAmount || 0}</p>
+      <p>${user.headderCalculation.paidAmount || 0.00}</p>
     </div>
     <div class="amount-card orange">
       <h3>Pending</h3>
-      <p>${user.pendingAmount || 0}</p>
+      <p>${user.headderCalculation.balanceAmount || 0.00}</p>
     </div>
   </div>
   </div>
@@ -335,6 +345,29 @@ function showToast(type, message) {
 		toast.remove();
 	}, 4000); // Auto-dismiss after 3 seconds
 }
+
+function showErrorPopup() {
+  const popup = document.getElementById("errorPopup");
+  if (popup) popup.style.display = "flex";
+}
+
+function closePopup() {
+  const popup = document.getElementById("errorPopup");
+  if (popup) popup.style.display = "none";
+}
+
+
+function showLoading() {
+  const loader = document.getElementById('globalLoader');
+  if (loader) loader.style.display = 'flex';
+}
+
+function hideLoading() {
+  const loader = document.getElementById('globalLoader');
+  if (loader) loader.style.display = 'none';
+}
+
+
 
 
 
