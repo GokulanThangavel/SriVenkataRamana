@@ -2,10 +2,12 @@ package com.example.googlesheets.service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.googlesheets.model.*;
 import com.example.googlesheets.utils.SafeParser;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -15,10 +17,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.example.googlesheets.model.FunctionType;
-import com.example.googlesheets.model.User;
-import com.example.googlesheets.model.FunctionPaymentDetails;
-import com.example.googlesheets.model.getUsersByPhone;
 import com.example.googlesheets.utils.Constants;
 import com.github.pjfanning.xlsx.StreamingReader;
 import com.google.gson.Gson;
@@ -50,6 +48,7 @@ public class GetUsersService {
 
                 List<FunctionPaymentDetails> finalPaymentList = new ArrayList<>();
 
+                Integer netAmount=0;
                 for (FunctionType fntype : request.getFunctiontype()) {
                     List<FunctionPaymentDetails> paymentList = new ArrayList<>();
                     String filename = generateFileName(fntype.getFunctionName(), fntype.getUUID());
@@ -58,8 +57,10 @@ public class GetUsersService {
 
                     finalPaymentList.addAll(paymentList);
 
-                }
+                    netAmount+= SafeParser.safeParseInt(fntype.getNetAmount());
 
+                }
+                user.setHeadderCalculation(calculatePaidAmount(finalPaymentList,netAmount));
                 user.setFunctionPaymentList(finalPaymentList);
             }
 
@@ -147,10 +148,10 @@ public class GetUsersService {
 
     public String getFunctionTypes() {
 
-		String function_file=fileDirectory+functionFile;
+        String function_file = fileDirectory + functionFile;
 
 
-		String jsonResponse = "";
+        String jsonResponse = "";
         try (FileInputStream fis = new FileInputStream(new File(function_file));
              Workbook workbook = StreamingReader.builder().rowCacheSize(100).bufferSize(4096).open(fis)) {
 
@@ -168,7 +169,7 @@ public class GetUsersService {
 
             }
 
-            if (functionList != null && functionList.size() > 0) {
+            if (!functionList.isEmpty()) {
                 jsonResponse = "{" + "\"status\":\"" + Constants.STATUS + "\"," + "\"responseMessage\":\""
                         + Constants.RESPONSE_MESSAGE + "\"," + "\"data\":" + g.toJson(functionList) + "}";
             } else {
@@ -179,23 +180,24 @@ public class GetUsersService {
 
             return jsonResponse;
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return null;
+        return jsonResponse;
     }
 
 
-    public List<FunctionPaymentDetails> getFunctionPayment(String fileName, String phone, String userUUID, String functionUUID, Integer userno) {
-
+    public List<FunctionPaymentDetails> getFunctionPayment(String fileName, String phone, String userUUID,
+                                                           String functionUUID, Integer userno)  {
+        List<FunctionPaymentDetails> functionList = new ArrayList<FunctionPaymentDetails>();
 
         try (FileInputStream fis = new FileInputStream(new File(fileName));
              Workbook workbook = StreamingReader.builder().rowCacheSize(100).bufferSize(4096).open(fis)) {
 
             Sheet sheet = workbook.getSheetAt(0);
 
-            List<FunctionPaymentDetails> functionList = new ArrayList<FunctionPaymentDetails>();
+
 
             Integer limit = 2;
             Integer columnLimit = 14;
@@ -234,11 +236,18 @@ public class GetUsersService {
 
             return functionList;
 
-        } catch (IOException e) {
+        } catch (FileNotFoundException fe) {
+            fe.printStackTrace();
+
+        } catch (IOException ie) {
+            ie.printStackTrace();
+
+        } catch (Exception e) {
             e.printStackTrace();
+
         }
 
-        return null;
+        return functionList;
 
     }
 
@@ -264,5 +273,20 @@ public class GetUsersService {
         return false;
     }
 
+
+    public HeadderCalculation calculatePaidAmount(List<FunctionPaymentDetails> finalPaymentList, Integer netAmount) {
+        HeadderCalculation headderCalculation = new HeadderCalculation();
+
+        headderCalculation.setTotalAmount(String.valueOf(netAmount));
+        double paidAmount = finalPaymentList.stream().mapToDouble(x -> SafeParser.safeParseDouble(x.getAmount())).sum();
+        headderCalculation.setPaidAmount(String.valueOf(paidAmount));
+
+        double balanceAmount = netAmount - paidAmount;
+
+        headderCalculation.setBalanceAmount(String.valueOf(balanceAmount));
+
+
+        return headderCalculation;
+    }
 
 }

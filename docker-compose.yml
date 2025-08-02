@@ -2,12 +2,14 @@ version: '3.8'
 
 services:
   springboot-app:
-    build: .
+    build:
+      context: .                 # make sure this is where your Dockerfile and pom.xml are
+      dockerfile: Dockerfile     # optional if your file is named Dockerfile
     container_name: srivenkataramana-app
     ports:
       - "8098:8098"
     volumes:
-      - E:/data:/data
+      - E:/data:/data            # Windows path
     environment:
       - SPRING_PROFILES_ACTIVE=prod
     restart: always
