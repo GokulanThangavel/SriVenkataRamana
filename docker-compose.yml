@@ -7,5 +7,7 @@ services:
     ports:
       - "8098:8098"
     volumes:
-      - E:/data:/data         # ⬅️ Mount Windows E:\data to /data in container
+      - E:/data:/data
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
     restart: always
