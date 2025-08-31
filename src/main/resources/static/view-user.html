@@ -272,6 +272,90 @@ li>label:hover, li>label:has(input:checked) {
   background-color: #fd7e14;
 }
 
+/* Scoped only for modal */
+#paymentModal .custom-modal-content {
+  width: 700px;
+  max-width: 90%;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+#paymentModal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+#paymentModal .modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+}
+
+#paymentModal .user-info {
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Two-column grid for normal inputs */
+#paymentModal .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 25px;
+}
+
+/* Three-column row for bill details */
+#paymentModal .bill-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px 25px;
+  margin-top: 15px;
+}
+
+#paymentModal .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+#paymentModal .form-footer {
+  margin-top: 20px;
+  text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #paymentModal .form-grid {
+    grid-template-columns: 1fr;
+  }
+  #paymentModal .bill-grid {
+    grid-template-columns: 1fr;
+  }
+}
+#paymentModal {
+  display: none;   /* important */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+#paymentModal select, details {
+	position: relative;
+	background-color: #f1f1f1;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+}
+
 
 </style>
 </head>
@@ -310,5 +394,73 @@ li>label:hover, li>label:has(input:checked) {
 			<span style="font-size: 14px;">Try searching again</span>
 		</p>
 	</div>
+	<!-- Custom Modal -->
+	<div id="paymentModal" class="custom-modal">
+		<div class="custom-modal-content">
+			<div class="modal-header">
+				<h3>Payment Details</h3>
+				<span class="close-btn" onclick="closePaymentModal()">&times;</span>
+			</div>
+
+			<h4 id="paymentUserInfo" class="user-info"></h4>
+
+			<form id="paymentForm" onsubmit="submitPayment(); return false;">
+				<input type="hidden" id="modalUserId">
+				<input type="hidden" id="modalUserPhone">
+				<input type="hidden" id="modalUserUUID">
+
+				<div class="form-grid">
+					<div class="form-group">
+						<label>Particular:</label>
+						<input type="text" id="modalParticular" required>
+					</div>
+
+					<div class="form-group">
+						<label>Date:</label>
+						<input type="date" id="modalDate" required>
+					</div>
+
+					<div class="form-group">
+						<label>Amount:</label>
+						<input type="number" id="modalAmount" required>
+					</div>
+
+					<div class="form-group">
+						<label>Collected By:</label>
+						<input type="text" id="modalCollectedBy" required>
+					</div>
+
+					<div class="form-group">
+						<label for="modalFunctionList">Function</label>
+						<select id="modalFunctionList"></select>
+					</div>
+				</div>
+
+				<!-- Special row for bill details -->
+				<div class="bill-grid">
+					<div class="form-group">
+						<label for="modalBillNo">Bill Number</label>
+						<input type="text" id="modalBillNo" />
+					</div>
+
+					<div class="form-group">
+						<label for="modalBillPerson">Bill Book Person</label>
+						<input type="text" id="modalBillPerson" />
+					</div>
+
+					<div class="form-group">
+						<label for="modalBillBookNo">Bill Book Number</label>
+						<select id="modalBillBookNo"></select>
+					</div>
+				</div>
+
+				<div class="form-footer">
+					<button type="submit" class="save-btn">Save Payment</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
 </body>
 </html>

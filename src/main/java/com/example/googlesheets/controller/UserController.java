@@ -1,6 +1,8 @@
 
 package com.example.googlesheets.controller;
 
+import com.example.googlesheets.model.PaymentRequest;
+import com.example.googlesheets.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,9 @@ public class UserController {
 	@Autowired
 	AddUserService addUserService;
 
+	@Autowired
+	PaymentService paymentService;
+
 	@PostMapping("/get")
 	public String getUser(@RequestBody getUsersByPhone request) {
 
@@ -48,5 +53,17 @@ public class UserController {
 		String jsonRespone = getUsersService.getFunctionTypes();
 
 		return jsonRespone;
+	}
+
+	@PostMapping("/savePayment")
+	public String savePayment(@RequestBody PaymentRequest request) {
+		String jsonRespone="";
+		try {
+			 jsonRespone =paymentService.appendPayment(request);
+			return jsonRespone;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return jsonRespone;
+		}
 	}
 }

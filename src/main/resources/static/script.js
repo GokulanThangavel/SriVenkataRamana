@@ -1,4 +1,6 @@
-
+let users_global = [];
+let function_global=[];
+let billBooks =[1,2,3,4];
 function loadHTML(filename) {
 	onInit(filename);
 	fetch(filename)
@@ -59,6 +61,7 @@ async function loadFunctionTypeList() {
 		if (result.status === "Success" && result.data) {
 
 			functionTypes = result.data;
+			function_global= functionTypes;
 			const list = document.getElementById("functionTypeList");
 			console.log(functionTypes)
 
@@ -165,7 +168,7 @@ async function searchUser() {
 			noResults.style.display = "block";
 		}
 	} catch (error) {
-		console.error("Error:", error);
+
         showErrorPopup();
 	}
 }
@@ -208,6 +211,8 @@ function submitUserForm(e) {
 function renderCards(users) {
 	const container = document.getElementById("userCards");
 	container.innerHTML = "";
+
+	users_global=users;
 
 	users.forEach((user, index) => {
 		container.innerHTML += `
@@ -328,10 +333,154 @@ function addPaymentRow(index) {
 	saveBtn.className = "btn-save";
 	saveBtn.style.margin = "10px 20px";
 	saveBtn.onclick = () => savePaymentRow(index);
-
+console.log(index);
 	document.getElementById(`details-${index}`).appendChild(saveBtn);
 }
 
+function openPaymentModal(paymentData) {
+// Fill header
+    document.getElementById("paymentUserInfo").innerHTML =
+        `<strong>${paymentData.name}</strong>
+         (Phone: ${paymentData.phone}, City: ${paymentData.city})`;
+
+    // Prefill hidden / existing fields
+    document.getElementById("modalUserId").value = paymentData.userId;
+    document.getElementById("modalUserPhone").value = paymentData.phone;
+    document.getElementById("modalUserUUID").value = paymentData.UUID;
+    document.getElementById("modalParticular").value = paymentData.particular || "";
+    document.getElementById("modalDate").value = paymentData.date || "";
+    document.getElementById("modalAmount").value = paymentData.amount || "";
+    document.getElementById("modalCollectedBy").value = paymentData.collectedBy || "";
+
+    // --- NEW FIELDS ---
+
+    // 1. Function List Dropdown
+    const fnSelect = document.getElementById("modalFunctionList");
+    console.log(function_global);
+    fnSelect.innerHTML = ""; // clear old options
+    function_global.forEach(fn => {
+        const opt = document.createElement("option");
+        opt.value = fn.SNO; // function ID
+        opt.textContent = fn.functionName; // function Name
+        opt.dataset.fn = JSON.stringify(fn);
+        fnSelect.appendChild(opt);
+    });
+
+    // Preselect if paymentData already has fnId
+    if (paymentData.fnId) {
+        fnSelect.value = paymentData.fnId;
+    }
+
+    // 2. Bill Number
+    document.getElementById("modalBillNo").value = paymentData.billNo || "";
+
+    // 3. Bill Book Person Name
+    document.getElementById("modalBillPerson").value = paymentData.billPerson || "";
+
+    // 4. Bill Book Number Dropdown
+    const bookSelect = document.getElementById("modalBillBookNo");
+    bookSelect.innerHTML = "";
+    billBooks.forEach(book => {
+        const opt = document.createElement("option");
+        opt.value = book;
+        opt.textContent = `Book ${book}`;
+        bookSelect.appendChild(opt);
+    });
+
+    if (paymentData.billBookNo) {
+        bookSelect.value = paymentData.billBookNo;
+    }
+
+    // Show modal
+    document.getElementById("paymentModal").style.display = "flex";
+}
+
+function closePaymentModal() {
+    document.getElementById("paymentModal").style.display = "none";
+}
+
+function savePaymentRow(index) {
+    const row = document.querySelector(`#save-row-${index}`);
+    if (!row) return;
+console.log(users_global);
+    const inputs = row.querySelectorAll("input");
+
+//    let fn_type={
+//         SNO : users_global[index];
+//    	 UUID;
+//    	 functionName;
+//    	 showFlag;
+//    	 netAmount;
+//
+//    };
+
+    const paymentData = {
+        userId: users_global[index].SNO,
+        name: users_global[index].name,
+        phone: users_global[index].phone,
+        UUID: users_global[index].UUID,
+        city: users_global[index].city,
+        particular: inputs[0].value,
+        date: inputs[1].value,
+        amount: inputs[2].value,
+        collectedBy: inputs[3].value
+    };
+
+    openPaymentModal(paymentData);
+}
+
+async function submitPayment() {
+        const functionSelect = document.getElementById("modalFunctionList");
+        const selectedOption = functionSelect.options[functionSelect.selectedIndex];
+        console.log(selectedOption);
+        const fnObj = selectedOption ? JSON.parse(selectedOption.dataset.fn) : null;
+
+        const selectedfn = {
+        sno : fnObj.SNO,
+        uuid: fnObj.UUID,
+        functionName: fnObj.functionName,
+        netAmount : fnObj.netAmount,
+        showFlag : fnObj.showFlag
+
+        }
+
+        const paymentData = {
+            userSno: document.getElementById("modalUserId").value,
+            particular: document.getElementById("modalParticular").value,
+            date: document.getElementById("modalDate").value,
+            amount: document.getElementById("modalAmount").value,
+            collectedBy: document.getElementById("modalCollectedBy").value,
+            phone : document.getElementById("modalUserPhone").value,
+            userId : document.getElementById("modalUserUUID").value,
+
+            functionType: selectedfn,  // ✅ send full function object here
+
+            billNo: document.getElementById("modalBillNo").value,
+            billPerson: document.getElementById("modalBillPerson").value,
+            billBookNo: document.getElementById("modalBillBookNo").value,
+        };
+
+        try {
+            const res = await fetch("/api/user/savePayment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(paymentData)
+            });
+
+            if (res.ok) {
+                alert("✅ Payment saved successfully!");
+                closePaymentModal();
+                location.reload();
+            } else {
+                alert("❌ Failed to save payment.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("⚠️ Error while saving payment.");
+        }
+
+
+}
 
 
 function showToast(type, message) {

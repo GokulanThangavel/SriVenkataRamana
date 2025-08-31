@@ -62,6 +62,7 @@ public class GetUsersService {
                 }
                 user.setHeadderCalculation(calculatePaidAmount(finalPaymentList,netAmount));
                 user.setFunctionPaymentList(finalPaymentList);
+//                user.setFunctionType(getFunctionTypesList());
             }
 
             if (users != null && users.size() > 0) {
@@ -81,7 +82,7 @@ public class GetUsersService {
 
     }
 
-    private String generateFileName(String functionName, String uuid) {
+    public String generateFileName(String functionName, String uuid) {
 
         return fileDirectory+Constants.FN + "_" + functionName + "_" + uuid + ".xlsx";
 
@@ -287,6 +288,39 @@ public class GetUsersService {
 
 
         return headderCalculation;
+    }
+
+    public List<FunctionType> getFunctionTypesList() {
+
+        String function_file = fileDirectory + functionFile;
+
+        List<FunctionType> functionList = new ArrayList<FunctionType>();
+
+        try (FileInputStream fis = new FileInputStream(new File(function_file));
+             Workbook workbook = StreamingReader.builder().rowCacheSize(100).bufferSize(4096).open(fis)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0)
+                    continue; // skip header
+
+                functionList.add(new FunctionType(SafeParser.safeParseInt(getCellValueAsString(row.getCell(0))),
+                        getCellValueAsString(row.getCell(1)), getCellValueAsString(row.getCell(2)),
+                        getCellValueAsString(row.getCell(3)), getCellValueAsString(row.getCell(4))));
+
+            }
+
+
+            return functionList;
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return functionList;
     }
 
 }

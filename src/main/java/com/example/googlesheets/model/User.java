@@ -15,6 +15,7 @@ public class User {
     private String pincode;
     private List<FunctionPaymentDetails> functionPaymentList;
 	private HeadderCalculation headderCalculation;
+	private List<FunctionType> functionType;
 	
 	public String getName() {
 		return name;
@@ -81,6 +82,14 @@ public class User {
 	}
 	public void setHeadderCalculation(HeadderCalculation headderCalculation) {
 		this.headderCalculation = headderCalculation;
+	}
+
+	public List<FunctionType> getFunctionType() {
+		return functionType;
+	}
+
+	public void setFunctionType(List<FunctionType> functionType) {
+		this.functionType = functionType;
 	}
 
 	public User(Integer sNO, String uUID, String name, String phone, String fatherName, String address, String city,
